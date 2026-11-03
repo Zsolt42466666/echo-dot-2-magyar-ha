@@ -1,0 +1,7 @@
+backup/
+*.img
+*.img.gz
+*.bin
+*.zip
+*.log
+secrets.yaml
