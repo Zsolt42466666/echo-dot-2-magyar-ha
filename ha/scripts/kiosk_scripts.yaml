@@ -1,0 +1,51 @@
+# Kiosk hangvezérlés: minta scriptek.
+# Cseréld a browser_id-t a sajátodra (browser_mod -> Browsers),
+# az entitásokat és az útvonalakat a sajátjaidra.
+
+kiosk_tartaly:
+  alias: Szennyvíztartály a kioszkon
+  description: >-
+    Megjeleníti a szennyvíztartály oldalt a kioszkon és visszaadja az összefoglalót.
+    A visszaadott "uzenet" szöveget szó szerint olvasd fel.
+  mode: single
+  sequence:
+    - action: browser_mod.navigate
+      data:
+        browser_id: YOUR_BROWSER_MOD_ID
+        path: /szennyviz-tartaly
+    - variables:
+        osszefoglalo:
+          uzenet: >-
+            Rendben, mutatom a szennyvíztartály oldalt.
+            A tartály szintje
+            {{ states('sensor.tartaly_tartaly_szint') | float(0) | round(0) | int }}
+            százalék.
+    - stop: Az oldal megjelenítve, az összefoglaló visszaadva.
+      response_variable: osszefoglalo
+
+kiosk_gazora:
+  alias: Gázóra a kioszkon
+  description: >-
+    Megjeleníti a gázóra és napi fogyasztás oldalt, visszaadja az összefoglalót.
+    A visszaadott "uzenet" szöveget szó szerint olvasd fel.
+  mode: single
+  sequence:
+    - action: browser_mod.navigate
+      data:
+        browser_id: YOUR_BROWSER_MOD_ID
+        path: /gazora-fogyasztas
+    - variables:
+        osszefoglalo:
+          uzenet: >-
+            Rendben, mutatom a gázórát. A mai fogyasztás
+            {{ states('sensor.YOUR_DAILY_GAS_SENSOR') | float(0) | round(2) }}
+            köbméter.
+    - stop: Az oldal megjelenítve, az összefoglaló visszaadva.
+      response_variable: osszefoglalo
+
+# kiosk_otthon: ugyanez a minta, több szenzorral (mozgás, lámpák, zár, jelenlét).
+# Sablonon belüli változó csak deklaráció után használható -> két külön
+# `variables:` blokk, egymás után.
+#
+# Conversation exposure: állítsd be az aliasokat (pl. "mutasd a tartályt",
+# "gázóra", "mutasd az otthonom").

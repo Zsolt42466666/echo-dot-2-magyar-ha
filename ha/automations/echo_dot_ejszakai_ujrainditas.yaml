@@ -1,0 +1,10 @@
+alias: Echo Dot éjszakai újraindítás
+description: Naponta 04:00-kor újraindítja a Dotot (stabilitás)
+triggers:
+  - trigger: time
+    at: "04:00:00"
+actions:
+  - action: button.press
+    target:
+      entity_id: button.jarvis_dot_restart
+mode: single

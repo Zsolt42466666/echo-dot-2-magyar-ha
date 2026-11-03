@@ -1,0 +1,11 @@
+{
+  "title": "Gázóra",
+  "kiosk_mode": {"hide_header": true, "hide_sidebar": true},
+  "views": [{
+    "title": "Fogyasztás",
+    "cards": [
+      {"type": "tile", "entity": "sensor.YOUR_DAILY_GAS_SENSOR", "name": "Napi fogyasztás"},
+      {"type": "history-graph", "hours_to_show": 168, "entities": ["sensor.YOUR_DAILY_GAS_SENSOR"]}
+    ]
+  }]
+}

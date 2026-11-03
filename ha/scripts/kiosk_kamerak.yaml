@@ -1,0 +1,9 @@
+alias: Kamerák a kioszkon
+description: A kiosk kijelzőn a Minden kamera oldalra vált. Hangvezérléshez.
+mode: single
+sequence:
+  - action: input_select.select_option
+    target: {entity_id: input_select.kiosk_nezet}
+    data: {option: Kamerák}
+  - action: browser_mod.navigate
+    data: {browser_id: YOUR_BROWSER_MOD_ID, path: /minden-kamera/kamerak}

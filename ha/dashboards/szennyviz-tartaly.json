@@ -1,0 +1,11 @@
+{
+  "title": "Szennyvíztartály",
+  "kiosk_mode": {"hide_header": true, "hide_sidebar": true},
+  "views": [{
+    "title": "Tartály",
+    "cards": [
+      {"type": "gauge", "entity": "sensor.tartaly_tartaly_szint", "min": 0, "max": 100, "name": "Szint"},
+      {"type": "history-graph", "hours_to_show": 48, "entities": ["sensor.tartaly_tartaly_szint"]}
+    ]
+  }]
+}

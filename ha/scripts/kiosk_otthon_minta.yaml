@@ -1,0 +1,38 @@
+# "Mutasd az otthonom": oldalváltás + szóban felolvasott összefoglaló.
+# Egyszerűsített minta, a sajátodra cseréld az entitásokat.
+alias: Otthon áttekintés a kioszkon
+description: >-
+  Megmutatja az alaprajzot és visszaadja az otthon állapotának szöveges összefoglalóját.
+  A választ szóról szóra mondd el a felhasználónak, semmit ne hagyj ki.
+mode: single
+sequence:
+  - action: input_select.select_option
+    target: {entity_id: input_select.kiosk_nezet}
+    data: {option: Alaprajz}
+  - action: browser_mod.navigate
+    data: {browser_id: YOUR_BROWSER_MOD_ID, path: /okos-alaprajz-uj/alaprajz}
+  # Először a részletek (egy variables blokkban nem lehet olyat használni,
+  # amit ugyanott deklarálsz, ezért két külön blokk):
+  - variables:
+      ajtok: >-
+        {% set ns = namespace(n=[]) %}
+        {% for e, n in {'binary_sensor.YOUR_DOOR_1':'a bejárati ajtó',
+                        'binary_sensor.YOUR_DOOR_2':'a kiskapu'}.items() %}
+          {% if is_state(e,'on') %}{% set ns.n = ns.n + [n] %}{% endif %}
+        {% endfor %}
+        {{ ('Nyitva van: ' ~ ns.n | join(', ') ~ '.') if ns.n else 'Minden ajtó zárva van.' }}
+      mozgas: >-
+        {% set ns = namespace(h=[]) %}
+        {% for e, n in {'binary_sensor.YOUR_PIR_1':'nappali',
+                        'binary_sensor.YOUR_PIR_2':'mosókonyha'}.items() %}
+          {% if is_state(e,'on') %}{% set ns.h = ns.h + [n] %}{% endif %}
+        {% endfor %}
+        {{ ('Mozgást érzékelek itt: ' ~ ns.h | unique | join(', ') ~ '.') if ns.h else 'Sehol nem érzékelek mozgást.' }}
+      tartaly: >-
+        A szennyvíztartály {{ states('sensor.tartaly_tartaly_szint') | float(0) | round(0) | int }} százalékon áll.
+  # Utána az összefoglaló, ami az előbbi változókra épít:
+  - variables:
+      osszefoglalo:
+        uzenet: "Rendben, mutatom az otthonodat. {{ mozgas }} {{ ajtok }} {{ tartaly }}"
+  - stop: Az alaprajz megjelenítve, az összefoglaló visszaadva.
+    response_variable: osszefoglalo
